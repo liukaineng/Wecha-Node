@@ -272,6 +272,38 @@ WeChat.prototype.handleMsg = function(req,res){
         });
     });
 }
-
+/**
+ * 发送模板消息
+ * 模板样例 ：
+ *   var templateData={
+        touser:req.body.openid,
+        template_id:'zPyMJjYyuENgPBwVPjHWv5e1aT_WOQ09_eKbmCb0qO0',
+        url:config.server+'demo?pagepath=details.html',
+        topcolor:"#FF0000",
+        data:{
+            name:{
+                value:user.name,
+                color:"#173177"
+            },
+            result:{
+                value:'报名成功!',
+                color:"#173177"
+            }
+        }
+    }
+ */
+WeChat.prototype.sendMsg=function(templateData)
+{
+    var that = this;
+    this.getAccessToken().then(function(data){
+        //格式化请求连接
+        var url = util.format(that.apiURL.template,that.apiDomain,data);
+        //使用 Post 请求发送模板消息
+        that.requestPost(url,JSON.stringify(templateData)).then(function(data){
+            //讲结果打印
+            console.log(data);
+        });
+    });
+}
 //暴露可供外部访问的接口
 module.exports = WeChat;
